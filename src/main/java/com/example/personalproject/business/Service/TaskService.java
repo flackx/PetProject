@@ -5,4 +5,6 @@ import com.example.personalproject.model.TaskRequest;
 public interface TaskService {
 
     Task createTask(TaskRequest taskRequest);
+
+    void deleteTaskById(Long taskId);
 }
