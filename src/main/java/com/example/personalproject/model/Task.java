@@ -59,10 +59,8 @@ public class Task {
         this.dueDate = dueDate;
         this.status = status;
     }
+    public Task() {}
 
-    public Task() {
-
-    }
     public enum Status {
         OPEN,
         IN_PROGRESS,
@@ -71,6 +69,4 @@ public class Task {
         CANCELLED,
         OVERDUE
     }
-
-
 }
