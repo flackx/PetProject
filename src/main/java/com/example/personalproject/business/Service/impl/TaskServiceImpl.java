@@ -18,7 +18,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task createTask(TaskRequest taskRequest) {
-        // Transform the TaskRequest to a Task object
         Task task = new Task();
         task.setTitle(taskRequest.getTitle());
         task.setDueDate(taskRequest.getDueDate());
