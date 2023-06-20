@@ -33,7 +33,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'mysql:mysql-connector-java:8.0.33'
-
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
+    implementation 'org.slf4j:slf4j-api'
+    implementation 'ch.qos.logback:logback-classic'
 }
 
 tasks.named('test') {

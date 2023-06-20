@@ -4,7 +4,9 @@ package com.example.personalproject.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "task_details")
+@Table(name = "task_details", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "task_id")
+})
 public class TaskDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
