@@ -17,7 +17,6 @@ public class TaskDetailsController {
     }
     @PostMapping("/{taskId}/details")
     public ResponseEntity<TaskDetails> createTaskDetails(@PathVariable Long taskId, @RequestBody TaskDetailsRequest taskDetailsRequest) {
-        // Create a new TaskDetails object using the provided request body
         TaskDetails taskDetails = new TaskDetails();
         taskDetails.setDescription(taskDetailsRequest.getDescription());
 
