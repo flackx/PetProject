@@ -36,7 +36,7 @@ public class TasksController {
             @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
 
     @PostMapping("/create")
-    public ResponseEntity<Task> createTask(@Parameter(description = "Create a task by adding required info") @RequestParam(required = false)
+    public ResponseEntity<Task> createTask(@Parameter(description = "Create a task by adding required info")
                                                @RequestBody TaskRequest taskRequest) {
         Task createdTask = taskService.createTask(taskRequest);
         return ResponseEntity.ok(createdTask);
@@ -50,7 +50,7 @@ public class TasksController {
             @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema()) }),
             @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
     @DeleteMapping("/delete/{taskId}")
-    public void deleteTask(@Parameter(description = "Delete a Task and its details by given id")@RequestParam(required = false) @PathVariable Long taskId) {
+    public void deleteTask(@Parameter(description = "Delete a Task and its details by given id") @PathVariable Long taskId) {
         if (taskId == null) {
             throw new IllegalArgumentException("Task id cannot be null");
         }

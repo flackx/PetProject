@@ -6,6 +6,8 @@ public class TaskRequest {
     private String title;
     private LocalDate dueDate;
     private Task.Status status;
+    private long taskId;
+
     public String getTitle() {
         return title;
     }
