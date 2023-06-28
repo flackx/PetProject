@@ -6,31 +6,31 @@ import com.example.personalproject.model.TaskRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import com.example.personalproject.web.controller.TasksController;
-
 import java.time.LocalDate;
-import java.util.UUID;
-
+import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(TasksController.class)
+
+@SpringBootTest
+@AutoConfigureMockMvc
 public class TaskControllerTest {
 
     @MockBean
     private TaskService taskService;
-
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
@@ -48,25 +48,49 @@ public class TaskControllerTest {
             task.setDueDate(taskRequest.getDueDate());
             task.setStatus(taskRequest.getStatus());
             return task;
+
         });
     }
 
     @Test
     void testCreateTask() throws Exception {
-        TaskRequest task = new TaskRequest();
-        task.setTitle("Test Task");
-        task.setDueDate(LocalDate.now());
-        task.setStatus(Task.Status.OPEN);
+        TaskRequest taskRequest = new TaskRequest();
+        taskRequest.setTitle("Test Task");
+        taskRequest.setDueDate(LocalDate.now());
+        taskRequest.setStatus(Task.Status.OPEN);
+        String requestBody = objectMapper.writeValueAsString(taskRequest);
         mockMvc.perform(post("/tasks/create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(task)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").exists())
+                .andReturn();
     }
 
     @Test
     void testDeleteTask() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/tasks/delete/{id}", 1l))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(status().isOk());
+    }
+    @Test
+    void testUpdateTask() throws Exception {
+        Task task = new Task();
+        task.setId(1L);
+        task.setTitle("Original Task");
+        task.setDueDate(LocalDate.now());
+        task.setStatus(Task.Status.OPEN);
+        String requestBody = objectMapper.writeValueAsString(task);
+        when(taskService.updateTask(eq(1L), any(Task.class))).thenReturn(Optional.of(task));
+        mockMvc.perform(put("/tasks/update/{taskId}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.title").value("Original Task"))
+                .andExpect(jsonPath("$.dueDate[0]").value(LocalDate.now().getYear()))
+                .andExpect(jsonPath("$.dueDate[1]").value(LocalDate.now().getMonthValue()))
+                .andExpect(jsonPath("$.dueDate[2]").value(LocalDate.now().getDayOfMonth()))
+                .andExpect(jsonPath("$.status").value(Task.Status.OPEN.toString()));
+        verify(taskService, times(1)).updateTask(eq(1L), any(Task.class));
     }
 }

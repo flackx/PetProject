@@ -9,7 +9,6 @@ import com.example.personalproject.model.TaskRequest;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
@@ -32,7 +31,7 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.save(task);
     }
     @Override
-    public void deleteTaskById(Long taskId) {
+    public Optional<Task> deleteTaskById(Long taskId) {
         log.info("Deleting task with id: {}", taskId);
         Optional<Task> taskOptional = taskRepository.findById(taskId);
         if (taskOptional.isPresent()) {
@@ -48,6 +47,17 @@ public class TaskServiceImpl implements TaskService {
         } else {
             log.info("Task with id: {} not found", taskId);
         }
+        return taskOptional;
+    }
+
+    @Override
+    public Optional<Task> updateTask(Long taskId, Task updatedTask) {
+        return Optional.ofNullable(taskRepository.save(updatedTask));
+    }
+
+    @Override
+    public Optional<Task>getTaskById(Long Id){
+        return taskRepository.findById(Id);
     }
 
 }

@@ -45,12 +45,12 @@ public class TaskServiceimpltest {
         savedTask.setDueDate(taskRequest.getDueDate());
         savedTask.setStatus(taskRequest.getStatus());
         when(taskRepository.save(Mockito.any(Task.class))).thenReturn(savedTask);
-        Task createdTask = taskService.createTask(taskRequest);
+        Optional<Task> createdTask = Optional.ofNullable(taskService.createTask(taskRequest));
         verify(taskRepository, Mockito.times(1)).save(Mockito.any(Task.class));
-        Assertions.assertEquals(savedTask.getId(), createdTask.getId());
-        Assertions.assertEquals(savedTask.getTitle(), createdTask.getTitle());
-        Assertions.assertEquals(savedTask.getDueDate(), createdTask.getDueDate());
-        Assertions.assertEquals(savedTask.getStatus(), createdTask.getStatus());
+        Assertions.assertEquals(savedTask.getId(), createdTask.get().getId());
+        Assertions.assertEquals(savedTask.getTitle(), createdTask.get().getTitle());
+        Assertions.assertEquals(savedTask.getDueDate(), createdTask.get().getDueDate());
+        Assertions.assertEquals(savedTask.getStatus(), createdTask.get().getStatus());
     }
 
     @Test
