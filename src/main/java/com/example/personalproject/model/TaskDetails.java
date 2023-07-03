@@ -51,4 +51,8 @@ public class TaskDetails {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public Task getTaskDetails() {
+        return task;
+    }
 }

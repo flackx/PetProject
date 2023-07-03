@@ -11,4 +11,5 @@ public interface TaskDetailsRepository extends JpaRepository<TaskDetails, Long> 
     @Query("SELECT COUNT(td) > 0 FROM TaskDetails td WHERE td.task.id = ?1")
     boolean existsByTaskId(Long taskId);
     TaskDetails findByTask(Task task);
+    TaskDetails findByTaskId(Long taskId);
 }
