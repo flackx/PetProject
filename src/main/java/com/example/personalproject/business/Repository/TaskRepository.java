@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-
+   // Task findByCommentId(Long commentId);
 }

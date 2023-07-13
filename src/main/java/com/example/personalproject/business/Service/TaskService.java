@@ -1,8 +1,10 @@
 package com.example.personalproject.business.Service;
+import com.example.personalproject.model.Comment;
 import com.example.personalproject.model.Task;
 import com.example.personalproject.model.TaskDetails;
 import com.example.personalproject.model.TaskRequest;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface TaskService {
@@ -14,4 +16,11 @@ public interface TaskService {
     Optional<Task> getTaskById(Long Id);
 
     Optional <Task> updateTask(Long taskId, Task Task);
+
+    Comment addCommentToTask(Long taskId, Comment comment);
+
+    List<Comment> getCommentsForTask(Long taskId);
+
+    //void deleteCommentById(Long commentId);
+
 }

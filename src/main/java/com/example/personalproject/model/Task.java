@@ -1,8 +1,13 @@
 package com.example.personalproject.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "tasks")
@@ -61,6 +66,10 @@ public class Task {
     }
     public Task() {}
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
     public enum Status {
         OPEN,
         IN_PROGRESS,
@@ -69,4 +78,8 @@ public class Task {
         CANCELLED,
         OVERDUE
     }
+    @JsonManagedReference
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
 }

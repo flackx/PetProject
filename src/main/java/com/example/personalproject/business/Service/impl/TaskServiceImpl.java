@@ -3,6 +3,7 @@ package com.example.personalproject.business.Service.impl;
 import com.example.personalproject.business.Repository.TaskDetailsRepository;
 import com.example.personalproject.business.Repository.TaskRepository;
 import com.example.personalproject.business.Service.TaskService;
+import com.example.personalproject.model.Comment;
 import com.example.personalproject.model.Task;
 import com.example.personalproject.model.TaskDetails;
 import com.example.personalproject.model.TaskRequest;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -61,5 +63,36 @@ public class TaskServiceImpl implements TaskService {
     public Optional<Task>getTaskById(Long Id){
         return taskRepository.findById(Id);
     }
+
+    public Comment addCommentToTask(Long taskId, Comment comment) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found with ID: " + taskId));
+        log.info("Adding comment to task with id: {}", taskId);
+        comment.setTask(task);
+        task.getComments().add(comment);
+        log.info("Saving comment to task with id: {}", taskId);
+        Comment savedComment = taskRepository.save(task).getComments().get(task.getComments().size() - 1);
+        log.info("Comment saved to task with id: {}", taskId);
+        return savedComment;
+    }
+
+    public List<Comment> getCommentsForTask(Long taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found with ID: " + taskId));
+        return task.getComments();
+    }
+    /*
+    @Override
+    public void deleteCommentById(Long commentId) {
+        Task task = taskRepository.findByCommentId(commentId);
+        if (task != null) {
+            log.info("Deleting comment with id: {}", commentId);
+            task.getComments().removeIf(comment -> comment.getId().equals(commentId));
+            taskRepository.save(task);
+        } else {
+            log.info("Comment with id: {} not found", commentId);
+        }
+    }
+    */
 
 }

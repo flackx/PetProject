@@ -44,15 +44,10 @@ public class TaskDetails {
         this.task = task;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
+    public String getDescription() {return description;}
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public Task getTaskDetails() {
-        return task;
-    }
+   // public Task getTaskDetails() {return task;}
 }

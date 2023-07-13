@@ -1,7 +1,10 @@
 package com.example.personalproject.model;
 
-import jakarta.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,51 +17,54 @@ public class Comment {
     @Column(nullable = false)
     private String content;
 
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     @Column(nullable = false)
-    private String username;
+    private LocalDateTime timestamp;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id", nullable = false)
+    private Task task;
 
-    public Comment(Long id, String content, String username, LocalDateTime createdAt) {
-        this.id = id;
-        this.content = content;
-        this.username = username;
-        this.createdAt = createdAt;
-    }
+
     public Comment() {
+        this.timestamp = LocalDateTime.now();
+    }
+
+    public Comment(String content, Task task) {
+        this.content = content;
+        this.task = task;
+        this.timestamp = LocalDateTime.now();
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getContent() {
         return content;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public Task getTask() {
+        return task;
     }
 
     public void setContent(String content) {
         this.content = content;
     }
 
-    public String getUsername() {
-        return username;
+    public void setTask(Task task) {
+        this.task = task;
+    }
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
 }

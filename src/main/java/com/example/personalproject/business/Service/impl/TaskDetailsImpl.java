@@ -1,5 +1,4 @@
 package com.example.personalproject.business.Service.impl;
-import com.example.personalproject.model.dto.TaskDetailsDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.example.personalproject.business.Repository.TaskDetailsRepository;
@@ -41,31 +40,23 @@ public class TaskDetailsImpl implements TaskDetailsService {
         return createdTaskDetails;
     }
 
-
+    @Override
     public Optional<TaskDetails> findTaskDetailsByTaskDetailsId(Long taskId) {
-        Optional<TaskDetails> taskDetails = Optional.ofNullable(taskDetailsRepository.findByTaskId(taskId));
+        Optional<TaskDetails> taskDetails = taskDetailsRepository.findByTaskId(taskId);
         return taskDetails;
     }
 
     @Override
-    public TaskDetailsDTO getTaskDetailsByTaskId(Long taskId) {
-        TaskDetails taskDetails = taskDetailsRepository.findByTaskId(taskId);
-        if (taskDetails == null) {
-            // Handle case when no task details found for the given taskId
-            // You can throw an exception or return a default/empty DTO as per your requirement
-        }
-
-        // Map the TaskDetails entity to TaskDetailsDTO
-        TaskDetailsDTO taskDetailsDTO = mapToDTO(taskDetails); // Use a mapping method or library to convert entity to DTO
-
-        return taskDetailsDTO;
+    public void deleteTaskDetailsById(Long taskDetailsId) {
+        taskDetailsRepository.deleteById(taskDetailsId);
     }
-    private TaskDetailsDTO mapToDTO(TaskDetails taskDetails) {
-        TaskDetailsDTO taskDetailsDTO = new TaskDetailsDTO();
-        taskDetailsDTO.setId(taskDetails.getId());
-     //   taskDetailsDTO.setTaskDetails(taskDetails.getTask()); // Corrected method name
-        taskDetailsDTO.setDescription(taskDetails.getDescription());
-        // Set other properties as needed
-        return taskDetailsDTO;
+
+    @Override
+    public Optional<TaskDetails> updateTaskDetails(Long taskDetailsId, TaskDetails updatedTaskDetails) {
+        return Optional.ofNullable(taskDetailsRepository.save(updatedTaskDetails));
     }
+
+
+
+
 }
