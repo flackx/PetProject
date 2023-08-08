@@ -48,7 +48,6 @@ public class TaskControllerTest {
 
     @BeforeEach
     public void setup() {
-        //mockMvc = MockMvcBuilders.standaloneSetup(new TasksController(taskService)).build();
         objectMapper.registerModule(new JavaTimeModule());
         when(taskService.createTask(any(TaskRequest.class))).thenAnswer(invocation -> {
             TaskRequest taskRequest = invocation.getArgument(0);
@@ -61,9 +60,6 @@ public class TaskControllerTest {
 
         });
     }
-
-
-
 
     @Test
     void testCreateTask() throws Exception {
@@ -147,7 +143,6 @@ public class TaskControllerTest {
         Mockito.verify(taskService, Mockito.times(1)).addCommentToTask(Mockito.anyLong(), Mockito.any());
     }
 
-
     @Test
     void testGetCommentsForTask() {
         Task task = new Task();
@@ -181,5 +176,4 @@ public class TaskControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(comments, responseEntity.getBody());
     }
-
 }

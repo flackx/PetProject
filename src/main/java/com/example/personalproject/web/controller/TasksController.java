@@ -79,11 +79,7 @@ public class TasksController {
     @GetMapping("/get/{taskId}")
     public ResponseEntity<Task> getTask(@Parameter(description = "Get a task and its details by given id", required = true) @NonNull @PathVariable("taskId") Long taskId) {
         Optional<Task> task = taskService.getTaskById(taskId);
-        if (task.isPresent()) {
-            return ResponseEntity.ok(task.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return task.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Operation(summary = "Create a new comment", description = "Create a new comment to a task with the given id", tags = {"Tasks", "Comments", "Create"})
@@ -95,7 +91,7 @@ public class TasksController {
             return ResponseEntity.badRequest().build();
         }
         Optional<Task> task = taskService.getTaskById(taskId);
-        if (!task.isPresent()) {
+        if (task.isEmpty()) {
             log.error("Task with id: {} not found", taskId);
             return ResponseEntity.notFound().build();
         }
@@ -112,7 +108,7 @@ public class TasksController {
             log.error("Task id is null");
             return ResponseEntity.badRequest().build();
         }
-        if (!taskService.getTaskById(taskId).isPresent()) {
+        if (taskService.getTaskById(taskId).isEmpty()) {
             log.error("Task with id: {} not found", taskId);
             return ResponseEntity.notFound().build();
         }
@@ -123,6 +119,12 @@ public class TasksController {
         List<Comment> comments = taskService.getCommentsForTask(taskId);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
+
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello you are connected";
+    }
+
 
 }
 
