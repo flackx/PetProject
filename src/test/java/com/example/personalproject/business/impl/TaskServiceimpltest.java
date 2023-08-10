@@ -1,5 +1,6 @@
 package com.example.personalproject.business.impl;
 
+import com.example.personalproject.Mapper.TaskMapper;
 import com.example.personalproject.business.Repository.TaskDetailsRepository;
 import com.example.personalproject.business.Repository.TaskRepository;
 import com.example.personalproject.business.Service.TaskService;
@@ -30,9 +31,11 @@ public class TaskServiceimpltest {
 
     private TaskService taskService;
 
+    private TaskMapper taskMapper;
+
     @BeforeEach
     void setUp() {
-        taskService = new TaskServiceImpl(taskRepository, taskDetailsRepository);
+        taskService = new TaskServiceImpl(taskRepository, taskDetailsRepository, taskMapper);
     }
     @Test
     void testCreateTask() {

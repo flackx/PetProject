@@ -1,5 +1,6 @@
 package com.example.personalproject.web.controller;
 
+import com.example.personalproject.model.dto.TaskDTO;
 import com.example.personalproject.business.Service.TaskService;
 import com.example.personalproject.model.Comment;
 import com.example.personalproject.model.Task;
@@ -42,6 +43,14 @@ public class TasksController {
         log.info("Created task with id: {}", createdTask.getId());
         return ResponseEntity.ok(createdTask);
     }
+
+    @PostMapping("/create/bulk")
+    public ResponseEntity<List<Task>> createTasks(@Parameter(description = "Create multiple tasks by adding required info")
+                                                  @RequestBody List<TaskRequest> taskRequests) {
+        List<Task> createdTasks = taskService.createTasks(taskRequests);
+        return ResponseEntity.ok(createdTasks);
+    }
+
 
     @Operation(summary = "Delete a task", description = "Delete a task and its details by given id", tags = {"Tasks", "Delete"})
     @ApiResponses({@ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = TasksController.class), mediaType = "application/json")}), @ApiResponse(responseCode = "404", content = {@Content(schema = @Schema())}), @ApiResponse(responseCode = "500", content = {@Content(schema = @Schema())})})
@@ -125,6 +134,14 @@ public class TasksController {
         return "Hello you are connected";
     }
 
+    @GetMapping("/get/all")
+    public ResponseEntity<List<TaskDTO>> getAllTasks() {
+        List<TaskDTO> tasks = taskService.getAllTaskDTOs();
+        if (tasks.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
+    }
 
 }
 
