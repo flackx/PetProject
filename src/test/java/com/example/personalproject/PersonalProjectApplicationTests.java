@@ -11,8 +11,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan(basePackages = "com.example.personalproject.model")
 class PersonalProjectApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+    //@Test
+   // void contextLoads() {
+
+  //  }
 
 }

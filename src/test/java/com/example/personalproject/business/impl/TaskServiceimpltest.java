@@ -1,5 +1,6 @@
 package com.example.personalproject.business.impl;
 
+import com.example.personalproject.Mapper.TaskMapper;
 import com.example.personalproject.business.Repository.TaskDetailsRepository;
 import com.example.personalproject.business.Repository.TaskRepository;
 import com.example.personalproject.business.Service.TaskService;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.time.LocalDate;
 import java.util.Optional;
 import static org.mockito.Mockito.verify;
@@ -29,9 +31,11 @@ public class TaskServiceimpltest {
 
     private TaskService taskService;
 
+    private TaskMapper taskMapper;
+
     @BeforeEach
     void setUp() {
-        taskService = new TaskServiceImpl(taskRepository, taskDetailsRepository);
+        taskService = new TaskServiceImpl(taskRepository, taskDetailsRepository, taskMapper);
     }
     @Test
     void testCreateTask() {
@@ -45,12 +49,12 @@ public class TaskServiceimpltest {
         savedTask.setDueDate(taskRequest.getDueDate());
         savedTask.setStatus(taskRequest.getStatus());
         when(taskRepository.save(Mockito.any(Task.class))).thenReturn(savedTask);
-        Task createdTask = taskService.createTask(taskRequest);
+        Optional<Task> createdTask = Optional.ofNullable(taskService.createTask(taskRequest));
         verify(taskRepository, Mockito.times(1)).save(Mockito.any(Task.class));
-        Assertions.assertEquals(savedTask.getId(), createdTask.getId());
-        Assertions.assertEquals(savedTask.getTitle(), createdTask.getTitle());
-        Assertions.assertEquals(savedTask.getDueDate(), createdTask.getDueDate());
-        Assertions.assertEquals(savedTask.getStatus(), createdTask.getStatus());
+        Assertions.assertEquals(savedTask.getId(), createdTask.get().getId());
+        Assertions.assertEquals(savedTask.getTitle(), createdTask.get().getTitle());
+        Assertions.assertEquals(savedTask.getDueDate(), createdTask.get().getDueDate());
+        Assertions.assertEquals(savedTask.getStatus(), createdTask.get().getStatus());
     }
 
     @Test
@@ -66,4 +70,5 @@ public class TaskServiceimpltest {
         verify(taskDetailsRepository).delete(taskDetails);
         verify(taskRepository).deleteById(taskId);
     }
+
 }

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class TaskDetailsImpl implements TaskDetailsService {
     private static final Logger log = LoggerFactory.getLogger(TaskDetailsImpl.class);
@@ -37,4 +39,24 @@ public class TaskDetailsImpl implements TaskDetailsService {
         log.info("Task details created successfully for task ID: {}", taskId);
         return createdTaskDetails;
     }
+
+    @Override
+    public Optional<TaskDetails> findTaskDetailsByTaskDetailsId(Long taskId) {
+        Optional<TaskDetails> taskDetails = taskDetailsRepository.findByTaskId(taskId);
+        return taskDetails;
+    }
+
+    @Override
+    public void deleteTaskDetailsById(Long taskDetailsId) {
+        taskDetailsRepository.deleteById(taskDetailsId);
+    }
+
+    @Override
+    public Optional<TaskDetails> updateTaskDetails(Long taskDetailsId, TaskDetails updatedTaskDetails) {
+        return Optional.ofNullable(taskDetailsRepository.save(updatedTaskDetails));
+    }
+
+
+
+
 }

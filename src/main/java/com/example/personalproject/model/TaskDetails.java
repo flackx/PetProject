@@ -3,6 +3,8 @@ package com.example.personalproject.model;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "task_details", uniqueConstraints = {
         @UniqueConstraint(columnNames = "task_id")
@@ -44,11 +46,21 @@ public class TaskDetails {
         this.task = task;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
+    public String getDescription() {return description;}
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskDetails that = (TaskDetails) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

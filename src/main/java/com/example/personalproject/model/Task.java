@@ -1,12 +1,21 @@
 package com.example.personalproject.model;
 
+import com.example.personalproject.serializer.TaskSerializer;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "tasks")
-public class Task {
+@JsonSerialize(using = TaskSerializer.class) // Apply the custom serializer
+public class Task implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -61,6 +70,10 @@ public class Task {
     }
     public Task() {}
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
     public enum Status {
         OPEN,
         IN_PROGRESS,
@@ -69,4 +82,10 @@ public class Task {
         CANCELLED,
         OVERDUE
     }
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
+
+
 }
